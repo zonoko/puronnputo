@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Master - Dynamic Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@300;400;600&family=Inter:wght@400;600;800&display=swap');
+        body { font-family: 'Inter', 'IBM Plex Sans JP', sans-serif; }
+        .input-focus:focus { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.1); }
+        .gradient-bg { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%, #db2777 100%); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        .generate-btn-anim:active { transform: scale(0.95); }
+        .section-card { transition: all 0.3s ease; border: 1px solid #e2e8f0; }
+        .section-card:hover { border-color: #6366f1; }
+        .magic-tag { background: rgba(99, 102, 241, 0.1); color: #6366f1; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] min-h-screen text-slate-800">
+
+    <!-- Header -->
+    <header class="gradient-bg py-6 px-6 text-white shadow-2xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-left">
+                <h1 class="text-2xl font-black flex items-center gap-3 tracking-tighter">
+                    <div class="bg-white text-indigo-600 p-1.5 rounded-xl shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    PROMPT MASTER <span class="text-indigo-200 font-light italic text-lg">v3.5 Dynamic</span>
+                </h1>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="bg-white/10 backdrop-blur-md p-1 rounded-xl flex gap-1 border border-white/20">
+                    <button onclick="setLanguage('ja')" id="lang-ja" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-md">日本語</button>
+                    <button onclick="setLanguage('en')" id="lang-en" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-white hover:bg-white/20">English</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Side: Builder -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Main Task (Dynamic Analysis Input) -->
+                <div class="bg-white rounded-[2rem] shadow-sm border border-slate-200 p-8 section-card">
+                    <div class="mb-6">
+                        <label class="block text-lg font-black text-slate-800 mb-2 flex items-center gap-3">
+                            <span class="flex justify-center items-center w-8 h-8 rounded-xl bg-indigo-600 text-white text-sm shadow-md">1</span>
+                            <span data-ja="やりたいことを自由に記述" data-en="Describe freely">やりたいことを自由に記述</span>
+                        </label>
+                        <p class="text-[11px] text-slate-400 mb-4" data-ja="「〜として」「〜向けに」「〜形式で」などを含めると自動解析されます" data-en="Auto-analyzes patterns like 'as a...', 'for...', 'in... format'">「〜として」「〜向けに」「〜形式で」などを含めると自動解析されます</p>
+                        <textarea id="task" rows="4" 
+                            data-placeholder-ja="例：プロの編集者として、初心者のためにブログ記事を箇条書きで要約して" 
+                            data-placeholder-en="e.g. As a professional editor, summarize a blog post for beginners in bullet points"
+                            class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white outline-none transition-all text-lg input-focus"></textarea>
+                    </div>
+
+                    <!-- Visual Feedback for Analysis -->
+                    <div id="analysis-tags" class="flex flex-wrap gap-2 mb-2 min-h-[24px]"></div>
+                </div>
+
+                <!-- Manual Overrides / Details -->
+                <div class="bg-white rounded-[2rem] shadow-sm border border-slate-200 p-8 section-card">
+                    <label class="block text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
+                        <span class="flex justify-center items-center w-8 h-8 rounded-xl bg-indigo-600 text-white text-sm shadow-md">2</span>
+                        <span data-ja="詳細設定（自動補完可）" data-en="Details (Auto-fill available)">詳細設定（自動補完可）</span>
+                    </label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-2 ml-1 uppercase" data-ja="役割 (Role)" data-en="Role">役割</label>
+                            <input id="role" type="text" data-placeholder-ja="例：データサイエンティスト" data-placeholder-en="e.g. Data Scientist"
+                                class="w-full p-4 bg-white border border-slate-200 rounded-xl focus:border-indigo-500 outline-none transition-all text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-2 ml-1 uppercase" data-ja="ターゲット" data-en="Target">ターゲット</label>
+                            <input id="target" type="text" data-placeholder-ja="例：経営層" data-placeholder-en="e.g. Executives"
+                                class="w-full p-4 bg-white border border-slate-200 rounded-xl focus:border-indigo-500 outline-none transition-all text-sm">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-2 ml-1 uppercase" data-ja="出力形式" data-en="Format">出力形式</label>
+                            <input id="structure" type="text" data-placeholder-ja="例：JSON形式、表形式" data-placeholder-en="e.g. JSON, Table"
+                                class="w-full p-4 bg-white border border-slate-200 rounded-xl focus:border-indigo-500 outline-none transition-all text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-2 ml-1 uppercase" data-ja="トーン" data-en="Tone">トーン</label>
+                            <select id="tone" class="w-full p-4 bg-white border border-slate-200 rounded-xl focus:border-indigo-500 outline-none transition-all text-sm appearance-none">
+                                <option value="" data-ja="デフォルト" data-en="Default">デフォルト</option>
+                                <option value="professional" data-ja="誠実・プロ" data-en="Professional">誠実・プロ</option>
+                                <option value="friendly" data-ja="フレンドリー" data-en="Friendly">フレンドリー</option>
+                                <option value="logical" data-ja="論理的" data-en="Logical">論理的</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Options -->
+                <div class="bg-white rounded-[2rem] shadow-sm border border-slate-200 p-8 section-card">
+                    <div class="flex flex-wrap gap-4 items-center justify-between">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="step-by-step" class="sr-only peer" checked>
+                            <div class="w-10 h-5 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-indigo-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
+                            <span class="ml-2 text-xs font-bold text-slate-600" data-ja="思考プロセスを表示" data-en="Show Chain of Thought">思考プロセスを表示</span>
+                        </label>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="ask-back" class="sr-only peer" checked>
+                            <div class="w-10 h-5 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-indigo-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
+                            <span class="ml-2 text-xs font-bold text-slate-600" data-ja="逆質問を促す" data-en="Enable Clarification">逆質問を促す</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- GENERATE ACTION -->
+                <div class="flex justify-center py-4">
+                    <button onclick="generatePrompt()" class="generate-btn-anim w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 px-12 rounded-[2rem] shadow-2xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 text-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M11.3 1.047a1 1 0 01.897.487l1.174 2.348a1 1 0 00.748.544l2.586.375a1 1 0 01.554 1.707l-1.872 1.825a1 1 0 00-.287.885l.442 2.575a1 1 0 01-1.451 1.054l-2.313-1.216a1 1 0 00-.937 0l-2.313 1.216a1 1 0 01-1.451-1.054l.442-2.575a1 1 0 00-.287-.885L1.907 6.51a1 1 0 01.554-1.707l2.586-.375a1 1 0 00.748-.544l1.174-2.348a1 1 0 01.897-.487z" clip-rule="evenodd" />
+                        </svg>
+                        <span data-ja="ダイナミック・プロンプト生成" data-en="Dynamic Prompt Generation">ダイナミック・プロンプト生成</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Side: Output -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-slate-900 rounded-[2.5rem] shadow-2xl flex flex-col min-h-[600px] border-8 border-slate-800 sticky top-28">
+                    <div class="p-6 border-b border-white/5 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Structured Prompt Output</span>
+                        </div>
+                        <button onclick="copyToClipboard()" id="copyBtn" class="bg-white/10 hover:bg-white/20 text-white text-[10px] font-black py-2 px-4 rounded-xl transition-all border border-white/10">
+                            <span data-ja="コピー" data-en="COPY">コピー</span>
+                        </button>
+                    </div>
+                    
+                    <div id="outputArea" class="p-10 text-slate-300 font-mono text-[13px] leading-relaxed overflow-y-auto max-h-[600px] flex-grow custom-scrollbar">
+                         <div class="h-full flex flex-col justify-center items-center text-slate-600 text-center opacity-40">
+                            <p class="text-xs uppercase font-bold tracking-widest" data-ja="指示を入力してください" data-en="Waiting for input">指示を入力してください</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-slate-950/50 flex flex-col gap-3 border-t border-white/5">
+                        <div class="flex justify-between items-center">
+                            <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest">Shortcuts</p>
+                            <button onclick="resetFields()" class="text-[9px] text-slate-500 hover:text-rose-400 font-bold">RESET ALL</button>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="quickTask('coding')" class="text-[10px] bg-slate-800 text-slate-400 px-3 py-1.5 rounded-lg hover:bg-indigo-600 hover:text-white transition-all font-bold">CODING</button>
+                            <button onclick="quickTask('writing')" class="text-[10px] bg-slate-800 text-slate-400 px-3 py-1.5 rounded-lg hover:bg-indigo-600 hover:text-white transition-all font-bold">WRITING</button>
+                            <button onclick="quickTask('business')" class="text-[10px] bg-slate-800 text-slate-400 px-3 py-1.5 rounded-lg hover:bg-indigo-600 hover:text-white transition-all font-bold">BUSINESS</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentLang = 'ja';
+
+        // Dynamic Analysis patterns
+        const patterns = {
+            ja: {
+                role: /(.+?)として/g,
+                target: /(.+?)(?:向け|のため|にとって)/g,
+                structure: /(.+?)(?:形式|構成|フォーマット)/g,
+                tone: /(.+?)(?:口調|トーン|雰囲気)/g
+            },
+            en: {
+                role: /as (?:a|an) (.+?)(?:,|$)/gi,
+                target: /for (.+?)(?:,|$)/gi,
+                structure: /in (.+?)(?: format| structure|$)/gi,
+                tone: /with (?:a|an) (.+?)(?: tone| style|$)/gi
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-ja]').forEach(el => el.textContent = el.getAttribute(`data-${lang}`));
+            document.querySelectorAll('[data-placeholder-ja]').forEach(el => el.placeholder = el.getAttribute(`data-placeholder-${lang}`));
+            
+            const btnJa = document.getElementById('lang-ja');
+            const btnEn = document.getElementById('lang-en');
+            btnJa.className = `px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${lang === 'ja' ? 'bg-white text-indigo-600 shadow-md' : 'text-white hover:bg-white/20'}`;
+            btnEn.className = `px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${lang === 'en' ? 'bg-white text-indigo-600 shadow-md' : 'text-white hover:bg-white/20'}`;
+        }
+
+        // Real-time analysis for tags
+        document.getElementById('task').addEventListener('input', function(e) {
+            const text = e.target.value;
+            const container = document.getElementById('analysis-tags');
+            container.innerHTML = '';
+            
+            const currentPatterns = patterns[currentLang];
+            let found = false;
+
+            for (const [key, regex] of Object.entries(currentPatterns)) {
+                let match;
+                // Reset regex lastIndex
+                regex.lastIndex = 0;
+                while ((match = regex.exec(text)) !== null) {
+                    const val = match[1].trim();
+                    if (val && val.length < 30) {
+                        const tag = document.createElement('span');
+                        tag.className = 'magic-tag';
+                        tag.textContent = `Detect ${key.toUpperCase()}: ${val}`;
+                        container.appendChild(tag);
+                        found = true;
+                    }
+                }
+            }
+        });
+
+        function generatePrompt() {
+            const fullTask = document.getElementById('task').value.trim();
+            const manualRole = document.getElementById('role').value.trim();
+            const manualTarget = document.getElementById('target').value.trim();
+            const manualStructure = document.getElementById('structure').value.trim();
+            const manualTone = document.getElementById('tone').value;
+            const stepByStep = document.getElementById('step-by-step').checked;
+            const askBack = document.getElementById('ask-back').checked;
+            const outputArea = document.getElementById('outputArea');
+
+            if (!fullTask) {
+                outputArea.innerHTML = `<span class="text-rose-400 font-bold">${currentLang === 'ja' ? 'タスクを入力してください' : 'Please enter a task'}</span>`;
+                return;
+            }
+
+            // --- Intelligence: Extract Context From "fullTask" ---
+            let detected = { role: manualRole, target: manualTarget, structure: manualStructure, tone: manualTone };
+            const currentPatterns = patterns[currentLang];
+
+            for (const [key, regex] of Object.entries(currentPatterns)) {
+                regex.lastIndex = 0;
+                let match;
+                while ((match = regex.exec(fullTask)) !== null) {
+                    // Only fill if manual field is empty
+                    if (!detected[key]) detected[key] = match[1].trim();
+                }
+            }
+
+            // Build structured text
+            let prompt = "";
+            const TONE_MAP = {
+                ja: { professional: "プロフェッショナル", friendly: "フレンドリー", logical: "論理的" },
+                en: { professional: "Professional", friendly: "Friendly", logical: "Logical" }
+            };
+
+            if (currentLang === 'ja') {
+                prompt += `# SYSTEM INSTRUCTION\nあなたは最高峰のAIアシスタントです。以下の定義に基づき、卓越したアウトプットを提供してください。\n\n`;
+                if (detected.role) prompt += `## あなたの役割\n${detected.role}として振る舞い、その専門知識を最大限に活用してください。\n\n`;
+                prompt += `## 実行内容（メインタスク）\n${fullTask}\n\n`;
+                if (detected.target || detected.structure || detected.tone) {
+                    prompt += `## 制約および詳細条件\n`;
+                    if (detected.target) prompt += `- 対象読者/ユーザー: ${detected.target}\n`;
+                    if (detected.structure) prompt += `- 出力形式/構成: ${detected.structure}\n`;
+                    if (detected.tone) prompt += `- 望ましい口調: ${TONE_MAP.ja[detected.tone] || detected.tone}\n`;
+                    prompt += `\n`;
+                }
+                prompt += `## 思考および実行のルール\n`;
+                if (stepByStep) prompt += `- 複雑なタスクの場合、まずは思考のステップを言語化し、論理的な裏付けを持って回答してください。\n`;
+                if (askBack) prompt += `- もし指示内容に曖昧さがある場合や、より良い品質のために必要な情報が不足している場合は、実行前に確認の質問をしてください。\n`;
+                prompt += `- 常に最高品質かつ事実に基づいた回答を心がけてください。`;
+            } else {
+                prompt += `# SYSTEM INSTRUCTION\nYou are a world-class AI assistant. Provide exceptional output based on the following definitions.\n\n`;
+                if (detected.role) prompt += `## Your Role\nAct as a "${detected.role}" and leverage your full expertise.\n\n`;
+                prompt += `## Main Task\n${fullTask}\n\n`;
+                if (detected.target || detected.structure || detected.tone) {
+                    prompt += `## Constraints & Details\n`;
+                    if (detected.target) prompt += `- Target Audience: ${detected.target}\n`;
+                    if (detected.structure) prompt += `- Format/Structure: ${detected.structure}\n`;
+                    if (detected.tone) prompt += `- Desired Tone: ${TONE_MAP.en[detected.tone] || detected.tone}\n`;
+                    prompt += `\n`;
+                }
+                prompt += `## Execution Logic\n`;
+                if (stepByStep) prompt += `- Think step-by-step for complex requests to ensure logical accuracy.\n`;
+                if (askBack) prompt += `- If instructions are ambiguous or more data is needed for quality, ask me clarifying questions before execution.\n`;
+                prompt += `- Always aim for high-quality, fact-based responses.`;
+            }
+
+            outputArea.textContent = prompt;
+        }
+
+        function quickTask(type) {
+            const data = {
+                coding: { ja: "熟練のシニアエンジニアとして、Pythonで高速なソートアルゴリズムを初心者向けに解説付きで実装して", en: "As a senior engineer, implement a fast sorting algorithm in Python with comments for beginners" },
+                writing: { ja: "クリエイティブライターとして、SF小説のプロット案を3つ箇条書きで作成して", en: "As a creative writer, create 3 sci-fi plot ideas in bullet points" },
+                business: { ja: "戦略コンサルタントとして、新規カフェ事業のSWOT分析を表形式で行って", en: "As a strategy consultant, perform a SWOT analysis for a new cafe business in a table" }
+            };
+            document.getElementById('task').value = data[type][currentLang];
+            // Trigger input event for analysis
+            document.getElementById('task').dispatchEvent(new Event('input'));
+            generatePrompt();
+        }
+
+        function resetFields() {
+            ['task', 'role', 'target', 'structure', 'tone'].forEach(id => document.getElementById(id).value = "");
+            document.getElementById('analysis-tags').innerHTML = '';
+            document.getElementById('outputArea').innerHTML = `<div class="h-full flex flex-col justify-center items-center text-slate-600 text-center opacity-40"><p class="text-xs uppercase font-bold tracking-widest">${currentLang === 'ja' ? '指示を入力してください' : 'Waiting for input'}</p></div>`;
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('outputArea').textContent;
+            if (!text || text.includes("入力してください") || text.includes("Waiting")) return;
+            const temp = document.createElement("textarea");
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand("copy");
+            document.body.removeChild(temp);
+            const btn = document.getElementById('copyBtn');
+            const original = btn.innerHTML;
+            btn.innerHTML = `<span class="text-emerald-400">COPIED!</span>`;
+            setTimeout(() => btn.innerHTML = original, 2000);
+        }
+    </script>
+</body>
+</html>
